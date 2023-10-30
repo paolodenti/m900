@@ -13,7 +13,7 @@ Scaricare lo script e cambiare i permessi in modo che possa essere eseguito
 chmod +x m900.sh
 ```
 
-eseguire lo script con `./m900` compare un menu con due scelte:
+eseguire lo script con `./m900.sh` compare un menu con due scelte:
 
 - creare una nuova cella
 - eseguire il provisioning di una cella già creata con lo script
