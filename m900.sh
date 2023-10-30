@@ -1,9 +1,11 @@
-#-----------------------
+#--------------------------------------------------
 # Script to refresh configuration for Snom M900
 #
 # you need to install sipsak
 # 
-#-----------------------
+# Author: Walter Trucci - walter at trucci.it
+# date: 30-10-2023
+#--------------------------------------------------
 
 #!/bin/bash
 
@@ -29,21 +31,57 @@ fi
 # the create function add a file with m900 extension with parameter to send with sipsak
 
 create(){
-echo "Please give me a name without spaces"
+echo "Please give me a name ${bold}${uline}without spaces${reset}"
 read name
-echo "the name is" $name "\n"
+if echo $name | grep -E '[ "]' 1>/dev/null ; then
+    echo "${red}The name contains one or more spaces${reset} \n";
+    echo "Please insert data again \n";
+    create;
+else
+    if [ $name ]; then
+        echo "The name is" $name "\n";
+    else
+        echo "${red}The string can't be empty${reset} \n";
+        echo "Please insert data again \n";
+        create;
+    fi
+fi
 
 echo "Please give me the multicell id"
 read id
-echo "the id is" $id "\n"
 
+if [ -n "$id" ] && [ "$id" -eq "$id" ] 2> /dev/null; then
+    if ! ([ $id -ge 1 ] && [ $id -le 512 ]); then
+        echo "${red}BAD ID need to be in a range from 1 to 512${reset} \n";
+        echo "Please insert data again \n";
+        create;
+    fi
+else
+    echo "${red}BAD ID need to be in a range from 1 to 512${reset} \n";
+    echo "Please insert data again \n";
+    sleep 2;
+    create;
+fi
+
+echo "\n"
 echo "Please give me the M900 IP"
 read m900Ip
-echo "the m900 ip is" $m900Ip "\n"
+echo $m900Ip | grep -Eo '^(([1-9]?[0-9]|1[0-9][0-9]|2([0-4][0-9]|5[0-5]))\.){3}([1-9]?[0-9]|1[0-9][0-9]|2([0-4][0-9]|5[0-5]))$' 1> /dev/null
+if ! [ $? -eq 0 ]; then
+    echo "${red}BAD IP${reset} \n";
+    echo "Please insert data again \n";
+    create;
+fi
 
+echo "\n"
 echo "Please give me the PBX IP"
 read pbxIp
-echo "the 3cx ip is" $pbxIp "\n"
+echo $pbxIp | grep -Eo '^(([1-9]?[0-9]|1[0-9][0-9]|2([0-4][0-9]|5[0-5]))\.){3}([1-9]?[0-9]|1[0-9][0-9]|2([0-4][0-9]|5[0-5]))$' 1> /dev/null
+if ! [ $? -eq 0 ]; then
+    echo "${red}BAD IP${reset} \n";
+    echo "Please insert data again \n";
+    create;
+fi
 
 tee $name.m900 <<EOF
 NOTIFY sip:$id@$m900Ip SIP/2.0
@@ -110,7 +148,7 @@ idCell=$(cat $file | awk -F"[:@]" '/To:/{print $3}')
 ipCell=$(cat $file | awk -F"[:@]" '/To:/{print $4}')
 ipPbx=$(cat $file | awk -F"[:@]" '/From:/{print $4}')
 
-echo sipsak -vvv -G -s sip:$idCell@$ipCell -H $ipPbx -f $file
+sipsak -vvv -G -s sip:$idCell@$ipCell -H $ipPbx -f $file
 }
 
 menu(){
@@ -132,7 +170,6 @@ esac
 sleep 2
 menu
 }
-
 
 # Start script
 menu
