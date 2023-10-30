@@ -1,4 +1,4 @@
-# Script per ricaricare la configurazione delle celle dect M900
+# Script per ricaricare la configurazione delle celle dect Snom M900
 
 Con 3cx per aggiornare la configurazione delle celle è necessario riavviare la cella dect configurata per il provisioning.
 Questo script permette di farlo in modo automatico.
