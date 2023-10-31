@@ -116,7 +116,8 @@ EOF
 # the execute function permit to select cell to provision
 
 execute() {
-    if [ -f *.m900 ]; then
+        ls | grep .m900 1>/dev/null
+        if [ $? -eq 0 ]; then
 
         while true; do
             text "Please select the M900 name"
