@@ -119,7 +119,7 @@ execute() {
     if [ -f *.m900 ]; then
 
         while true; do
-            echo "Please select the M900 name"
+            text "Please select the M900 name"
             set -- *.m900
 
             i=0
@@ -151,8 +151,7 @@ execute() {
         provisioning
 
     else
-        echo "${red}No cell configured."
-        echo "Please create a new cell first!${reset}"
+        error "No cell configured.\nPlease create a new cell first!${reset}"
         sleep 3
     fi
 }
