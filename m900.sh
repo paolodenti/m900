@@ -93,7 +93,7 @@ create() {
 
         printf "%s" "${pbxIp}" | grep -Eo '^(([1-9]?[0-9]|1[0-9][0-9]|2([0-4][0-9]|5[0-5]))\.){3}([1-9]?[0-9]|1[0-9][0-9]|2([0-4][0-9]|5[0-5]))$' 1>/dev/null
         if ! [ $? -eq 0 ]; then
-            error "${red}BAD IP${reset}\n"
+            error "BAD IP\n"
             text "Please insert data again\n"
         else
             break
