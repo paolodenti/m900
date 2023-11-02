@@ -215,6 +215,7 @@ fi
 
 # collect command line options
 
+# default values for getopts
 DIRECTORY="."
 
 while getopts ":d:h" options; do
