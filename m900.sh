@@ -177,6 +177,7 @@ provisioning() {
     ipPbx="$(cat $file | awk -F"[:@]" '/From:/{print $4}')"
 
     sipsak -vvv -G -s sip:$idCell@$ipCell -H $ipPbx -f "$file"
+    sleep 3
 }
 
 menu() {
