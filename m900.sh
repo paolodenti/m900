@@ -223,11 +223,11 @@ while getopts ":d:h" options; do
     d)
         DIRECTORY=${OPTARG}
         if ! [ -d "${DIRECTORY}" ]; then
-            fail "\nDirectory '${DIRECTORY}' does not exist\n"
+            fail "Directory '${DIRECTORY}' does not exist"
         fi
         ;;
     :)
-        fail "Error: -${OPTARG} requires an argument."
+        fail "-${OPTARG} requires an argument."
         ;;
     h)
         usage
