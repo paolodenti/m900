@@ -17,6 +17,14 @@ bold="\e[1m"
 uline="\e[4m"
 reset="\e[0m"
 
+usage() {
+    echo "Usage: $0 [ -d file folder ] [ -h ]" 1>&2
+    echo "-d file folder: directory where the file are stored"
+    echo "-h: help"
+
+    exit 1
+}
+
 text() {
     local msg="$1"
 
@@ -39,6 +47,11 @@ fail() {
 # the create function add a file with m900 extension with parameter to send with sipsak
 
 create() {
+    local name=""
+    local id=""
+    local m900Ip=""
+    local pbxIp=""
+
     while :; do
         text "Please give me a name ${bold}${uline}without spaces${reset}"
         read name
@@ -100,7 +113,7 @@ create() {
         fi
     done
 
-    cat >"$name.m900" <<EOF
+    cat >"${DIRECTORY}${name}.m900" <<EOF
 NOTIFY sip:$id@$m900Ip SIP/2.0
 To: sip:$id@$m900Ip
 From: sip:sipsak@$pbxIp
@@ -146,9 +159,7 @@ execute() {
         done
 
         shift "$((number - 1))"
-        file=$1
-
-        provisioning
+        provisioning $1
 
     else
         error "No cell configured.\nPlease create a new cell first!${reset}"
@@ -159,6 +170,8 @@ execute() {
 # the provisioning function send command to the m900
 
 provisioning() {
+    local file="${DIRECTORY}$1"
+
     idCell="$(cat $file | awk -F"[:@]" '/To:/{print $3}')"
     ipCell="$(cat $file | awk -F"[:@]" '/To:/{print $4}')"
     ipPbx="$(cat $file | awk -F"[:@]" '/From:/{print $4}')"
@@ -168,6 +181,7 @@ provisioning() {
 
 menu() {
     local error_msg=""
+
     while :; do
         clear
 
@@ -198,4 +212,32 @@ if ! [ -x "$(command -v sipsak)" ]; then
     fail "\nError: sipsak is not installed!\n"
 fi
 
+# collect command line options
+
+DIRECTORY="."
+
+while getopts ":d:h" options; do
+    case "${options}" in #
+    d)
+        DIRECTORY=${OPTARG}
+        if ! [ -d "${DIRECTORY}" ]; then
+            fail "\nError: Directory '${DIRECTORY}' does not exists!\n"
+        fi
+        ;;
+    :)
+        fail "Error: -${OPTARG} requires an argument."
+        ;;
+    h)
+        usage
+        ;;
+    *)
+        usage
+        ;;
+    esac
+done
+
+# add a / to the and of the directory if not present
+DIRECTORY="$(echo ${DIRECTORY} | sed 's![^/]$!&/!')"
+
+# start menu
 menu
