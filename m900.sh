@@ -129,11 +129,11 @@ EOF
 # the execute function permit to select cell to provision
 
 execute() {
-    if [ -f *.m900 ]; then
+    if compgen -G "${DIRECTORY}*.m900" >/dev/null; then
 
         while true; do
             text "Please select the M900 name"
-            set -- *.m900
+            set -- ${DIRECTORY}*.m900
 
             i=0
             for pathname; do
@@ -170,13 +170,13 @@ execute() {
 # the provisioning function send command to the m900
 
 provisioning() {
-    local file="${DIRECTORY}$1"
+    local file="$1"
 
     idCell="$(cat $file | awk -F"[:@]" '/To:/{print $3}')"
     ipCell="$(cat $file | awk -F"[:@]" '/To:/{print $4}')"
     ipPbx="$(cat $file | awk -F"[:@]" '/From:/{print $4}')"
 
-    sipsak -vvv -G -s sip:$idCell@$ipCell -H $ipPbx -f "$file"
+    echo sipsak -vvv -G -s sip:$idCell@$ipCell -H $ipPbx -f "$file"
 }
 
 menu() {
