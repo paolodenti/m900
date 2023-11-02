@@ -18,8 +18,8 @@ uline="\e[4m"
 reset="\e[0m"
 
 usage() {
-    echo "Usage: $0 [ -d file folder ] [ -h ]" 1>&2
-    echo "-d file folder: directory where the file are stored" 1>&2
+    echo "Usage: $0 [ -d m900 files folder ] [ -h ]" 1>&2
+    echo "-d file folder: directory where the m900 files are stored" 1>&2
     echo "-h: help" 1>&2
 
     exit 1
