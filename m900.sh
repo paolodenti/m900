@@ -229,10 +229,7 @@ while getopts ":d:h" options; do
     :)
         fail "-${OPTARG} requires an argument."
         ;;
-    h)
-        usage
-        ;;
-    *)
+    h | *)
         usage
         ;;
     esac
