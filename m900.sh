@@ -19,8 +19,8 @@ reset="\e[0m"
 
 usage() {
     echo "Usage: $0 [ -d file folder ] [ -h ]" 1>&2
-    echo "-d file folder: directory where the file are stored"
-    echo "-h: help"
+    echo "-d file folder: directory where the file are stored" 1>&2
+    echo "-h: help" 1>&2
 
     exit 1
 }
